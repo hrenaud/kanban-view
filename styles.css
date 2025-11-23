@@ -1,0 +1,274 @@
+.kanban-view-container {
+	padding: 10px;
+	height: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	position: relative;
+}
+
+.kanban-container {
+	display: flex;
+	gap: calc(var(--size-4-3) / 2);
+	min-height: 100%;
+	align-items: flex-start;
+}
+
+.kanban-column {
+	flex: 0 0 300px;
+	background: var(--background-secondary);
+	border-radius: 8px;
+	border: 1px solid var(--background-modifier-border);
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 100px);
+	min-height: 200px;
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.kanban-column.column-dragging {
+	opacity: 0.5;
+	transform: rotate(2deg);
+}
+
+.kanban-column.column-drag-over {
+	border-color: var(--interactive-accent);
+	border-width: 2px;
+}
+
+.kanban-column-fixed .kanban-column-header {
+	cursor: default;
+}
+
+.kanban-column-fixed .kanban-column-header:hover {
+	background: var(--background-primary-alt);
+}
+
+.kanban-column-drop-zone {
+	flex: 0 0 0px;
+	transition: all 0.2s ease;
+	margin: 0;
+	border-radius: 2px;
+	opacity: 0;
+	pointer-events: none;
+	background: transparent;
+	min-height: 200px;
+	position: relative;
+}
+
+/* Quand une colonne est en cours de drag, afficher les zones de drop */
+.kanban-container.column-dragging .kanban-column-drop-zone,
+.kanban-columns-container.column-dragging .kanban-column-drop-zone {
+	flex: 0 0 var(--kanban-drop-zone-width, calc(var(--size-4-3) * 3));
+	opacity: 1;
+	margin: 0;
+	pointer-events: auto;
+	background: var(--background-modifier-border);
+	border: 1px dashed var(--background-modifier-border-hover);
+}
+
+/* Zone de drop active (survolée) */
+.kanban-column-drop-zone.drop-zone-active {
+	flex: 0 0 var(--kanban-drop-zone-active-width, calc(var(--size-4-3) * 3.6)) !important;
+	background: var(--interactive-accent) !important;
+	margin: 0 !important;
+	border: 2px solid var(--interactive-accent) !important;
+	box-shadow: 0 0 12px var(--interactive-accent);
+	opacity: 1 !important;
+	border-radius: 4px;
+}
+
+.kanban-column-header {
+	padding: 12px 16px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: var(--background-primary-alt);
+	border-radius: 8px 8px 0 0;
+	cursor: move;
+	user-select: none;
+}
+
+.kanban-column-header:hover {
+	background: var(--background-modifier-hover);
+}
+
+.kanban-column-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text-normal);
+}
+
+.kanban-column-count {
+	font-size: 12px;
+	color: var(--text-muted);
+	background: var(--background-modifier-border);
+	padding: 2px 8px;
+	border-radius: 12px;
+}
+
+.kanban-column-body {
+	flex: 1;
+	padding: 8px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	min-height: 100px;
+	transition: background-color 0.2s ease;
+}
+
+.kanban-column-body.drag-over {
+	background-color: var(--interactive-hover);
+	border: 2px dashed var(--interactive-accent);
+}
+
+/* Structure flexbox simple pour les cartes Kanban */
+.kanban-card {
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	padding: 12px;
+	margin-bottom: 8px;
+	cursor: pointer; /* Main avec index pointé pour indiquer qu'on peut cliquer */
+	transition: all 0.2s ease;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.kanban-card:hover {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+	border-color: var(--interactive-accent);
+	cursor: pointer; /* Main avec index pointé au survol */
+}
+
+.kanban-card.drag-start {
+	cursor: grab !important; /* Main ouverte quand on commence à dragger */
+}
+
+.kanban-card.dragging {
+	opacity: 0.5;
+	transform: rotate(2deg);
+	cursor: grabbing !important; /* Main ouverte fermée quand on drag */
+}
+
+.kanban-card-title {
+	font-weight: 600;
+	font-size: var(--font-ui-medium);
+	color: var(--text-normal);
+	margin: 0;
+	line-height: 1.4;
+}
+
+.kanban-card-properties {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.kanban-card-property {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.kanban-property-label {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	line-height: 1.4;
+}
+
+.kanban-property-value {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px;
+	min-height: 20px;
+	color: var(--text-normal);
+	font-size: var(--font-ui-smaller);
+	line-height: 1.5;
+}
+
+.kanban-property-value:empty::before {
+	content: "\2014";
+	color: var(--text-faint);
+}
+
+/* Styles pour les inputs de date/datetime - correspondre exactement à la vue Card native */
+.kanban-property-value .metadata-input.mod-date,
+.kanban-property-value .metadata-input.mod-datetime {
+	width: auto;
+	min-width: 120px;
+	font-size: var(--font-ui-smaller);
+	line-height: 1.5;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: var(--text-normal);
+	/* Le navigateur formatera automatiquement selon les paramètres système */
+}
+
+/* Styles pour les listes de valeurs */
+.kanban-property-value .value-list-container {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0;
+}
+
+.kanban-property-value .value-list-element {
+	display: inline-flex;
+	align-items: center;
+}
+
+.kanban-property-value .value-list-gap {
+	display: inline-block;
+	width: 4px;
+}
+
+/* Styles pour les tags - utiliser les variables CSS natives d'Obsidian */
+.kanban-property-value .value-list-element .tag {
+	background-color: var(--tag-background);
+	border: var(--tag-border-width) solid var(--tag-border-color);
+	border-radius: var(--tag-radius);
+	color: var(--tag-color);
+	font-size: var(--tag-size);
+	font-weight: var(--tag-weight);
+	text-decoration: var(--tag-decoration);
+	padding: var(--tag-padding-y) var(--tag-padding-x);
+	line-height: 1;
+	display: inline-block;
+}
+
+
+.kanban-empty {
+	padding: 40px;
+	text-align: center;
+	color: var(--text-muted);
+	font-size: 14px;
+}
+
+
+/* Scrollbar personnalisée pour les colonnes */
+.kanban-column-body::-webkit-scrollbar {
+	width: 8px;
+}
+
+.kanban-column-body::-webkit-scrollbar-track {
+	background: var(--background-secondary);
+	border-radius: 4px;
+}
+
+.kanban-column-body::-webkit-scrollbar-thumb {
+	background: var(--background-modifier-border);
+	border-radius: 4px;
+}
+
+.kanban-column-body::-webkit-scrollbar-thumb:hover {
+	background: var(--background-modifier-border-hover);
+}
+
