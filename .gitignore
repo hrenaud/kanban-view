@@ -1,7 +1,6 @@
 *.log
 .DS_Store
 node_modules/
-main.js
 main.js.map
 versions.json
 .changeset/*.md
