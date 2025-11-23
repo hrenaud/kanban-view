@@ -96,7 +96,11 @@ var KanbanCard = class {
     let touchStartY = 0;
     let touchStartTime = 0;
     let draggedCard = null;
+    let dragDelayTimeout = null;
+    let isDragReady = false;
     const DRAG_THRESHOLD = 5;
+    const DRAG_DELAY = 250;
+    const VERTICAL_DRAG_RATIO = 1.2;
     card.addEventListener("mousedown", (e) => {
       mouseDownX = e.clientX;
       mouseDownY = e.clientY;
@@ -140,7 +144,16 @@ var KanbanCard = class {
       touchStartY = touch.clientY;
       touchStartTime = Date.now();
       isDragging = false;
+      isDragReady = false;
       draggedCard = card;
+      if (dragDelayTimeout) {
+        clearTimeout(dragDelayTimeout);
+        dragDelayTimeout = null;
+      }
+      dragDelayTimeout = setTimeout(() => {
+        isDragReady = true;
+        card.classList.add("drag-ready");
+      }, DRAG_DELAY);
     }, { passive: true });
     card.addEventListener("touchmove", (e) => {
       if (!draggedCard || draggedCard !== card)
@@ -148,18 +161,34 @@ var KanbanCard = class {
       const touch = e.touches[0];
       const deltaX = Math.abs(touch.clientX - touchStartX);
       const deltaY = Math.abs(touch.clientY - touchStartY);
-      if ((deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) && !isDragging) {
-        isDragging = true;
-        card.classList.add("dragging");
-        const rect = card.getBoundingClientRect();
-        card.style.width = `${rect.width}px`;
-        card.style.position = "fixed";
-        card.style.zIndex = "10000";
-        card.style.pointerEvents = "none";
-        card.style.left = `${rect.left}px`;
-        card.style.top = `${rect.top}px`;
-        card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
-        e.preventDefault();
+      if (deltaX > deltaY * VERTICAL_DRAG_RATIO && !isDragging) {
+        if (dragDelayTimeout) {
+          clearTimeout(dragDelayTimeout);
+          dragDelayTimeout = null;
+        }
+        card.classList.remove("drag-ready");
+        isDragReady = false;
+        return;
+      }
+      if (isDragReady && (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) && !isDragging) {
+        if (deltaY >= deltaX) {
+          isDragging = true;
+          card.classList.add("dragging");
+          card.classList.remove("drag-ready");
+          if (dragDelayTimeout) {
+            clearTimeout(dragDelayTimeout);
+            dragDelayTimeout = null;
+          }
+          const rect = card.getBoundingClientRect();
+          card.style.width = `${rect.width}px`;
+          card.style.position = "fixed";
+          card.style.zIndex = "10000";
+          card.style.pointerEvents = "none";
+          card.style.left = `${rect.left}px`;
+          card.style.top = `${rect.top}px`;
+          card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
+          e.preventDefault();
+        }
       } else if (isDragging) {
         card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
         const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -176,6 +205,11 @@ var KanbanCard = class {
     card.addEventListener("touchend", async (e) => {
       if (!draggedCard || draggedCard !== card)
         return;
+      if (dragDelayTimeout) {
+        clearTimeout(dragDelayTimeout);
+        dragDelayTimeout = null;
+      }
+      card.classList.remove("drag-ready");
       if (isDragging) {
         const touch = e.changedTouches[0];
         const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -199,6 +233,7 @@ var KanbanCard = class {
         card.style.top = "";
         card.style.transform = "";
         isDragging = false;
+        isDragReady = false;
         draggedCard = null;
       } else {
         const touchDuration = Date.now() - touchStartTime;
@@ -214,6 +249,15 @@ var KanbanCard = class {
           }
         }
       }
+      draggedCard = null;
+    }, { passive: true });
+    card.addEventListener("touchcancel", () => {
+      if (dragDelayTimeout) {
+        clearTimeout(dragDelayTimeout);
+        dragDelayTimeout = null;
+      }
+      card.classList.remove("drag-ready");
+      isDragReady = false;
       draggedCard = null;
     }, { passive: true });
   }

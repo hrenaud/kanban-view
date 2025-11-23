@@ -148,6 +148,15 @@
 	cursor: grab !important; /* Main ouverte quand on commence à dragger */
 }
 
+/* Visual feedback during drag delay (like Trello's lift effect) */
+.kanban-card.drag-ready {
+	transform: translateY(-2px) scale(1.02);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+	z-index: 1000;
+	position: relative;
+}
+
 .kanban-card.dragging {
 	opacity: 0.5;
 	transform: rotate(2deg);

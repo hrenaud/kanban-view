@@ -117,7 +117,11 @@ export class KanbanCard {
 		let touchStartY = 0;
 		let touchStartTime = 0;
 		let draggedCard: HTMLElement | null = null;
+		let dragDelayTimeout: NodeJS.Timeout | null = null;
+		let isDragReady = false; // Whether the delay has passed and drag can start
 		const DRAG_THRESHOLD = 5; // Distance in pixels to consider a drag
+		const DRAG_DELAY = 250; // Delay in ms before drag can start (like Trello)
+		const VERTICAL_DRAG_RATIO = 1.2; // Movement must be at least 1.2x more vertical than horizontal
 
 		// ========== Mouse support ==========
 		
@@ -179,7 +183,21 @@ export class KanbanCard {
 			touchStartY = touch.clientY;
 			touchStartTime = Date.now();
 			isDragging = false;
+			isDragReady = false;
 			draggedCard = card;
+			
+			// Clear any existing timeout
+			if (dragDelayTimeout) {
+				clearTimeout(dragDelayTimeout);
+				dragDelayTimeout = null;
+			}
+			
+			// Start delay timer - after delay, allow drag to start
+			dragDelayTimeout = setTimeout(() => {
+				isDragReady = true;
+				// Add visual feedback that drag is ready (like Trello's lift effect)
+				card.classList.add("drag-ready");
+			}, DRAG_DELAY);
 		}, { passive: true });
 
 		card.addEventListener("touchmove", (e: TouchEvent) => {
@@ -189,22 +207,47 @@ export class KanbanCard {
 			const deltaX = Math.abs(touch.clientX - touchStartX);
 			const deltaY = Math.abs(touch.clientY - touchStartY);
 			
-			// If movement exceeds threshold, start drag
-			if ((deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) && !isDragging) {
-				isDragging = true;
-				card.classList.add("dragging");
-				
-				// Save original width before changing position
-				const rect = card.getBoundingClientRect();
-				card.style.width = `${rect.width}px`;
-				card.style.position = "fixed";
-				card.style.zIndex = "10000";
-				card.style.pointerEvents = "none";
-				card.style.left = `${rect.left}px`;
-				card.style.top = `${rect.top}px`;
-				card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
-				
-				e.preventDefault();
+			// Cancel drag if movement is primarily horizontal (swipe) - allow horizontal scrolling
+			if (deltaX > deltaY * VERTICAL_DRAG_RATIO && !isDragging) {
+				// This is a horizontal swipe, cancel drag preparation
+				if (dragDelayTimeout) {
+					clearTimeout(dragDelayTimeout);
+					dragDelayTimeout = null;
+				}
+				card.classList.remove("drag-ready");
+				isDragReady = false;
+				return; // Don't prevent default, allow scrolling
+			}
+			
+			// Only start drag if:
+			// 1. Delay has passed (isDragReady)
+			// 2. Movement exceeds threshold
+			// 3. Movement is primarily vertical (not horizontal swipe)
+			if (isDragReady && (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) && !isDragging) {
+				// Movement must be more vertical than horizontal to start drag
+				if (deltaY >= deltaX) {
+					isDragging = true;
+					card.classList.add("dragging");
+					card.classList.remove("drag-ready");
+					
+					// Clear timeout if still pending
+					if (dragDelayTimeout) {
+						clearTimeout(dragDelayTimeout);
+						dragDelayTimeout = null;
+					}
+					
+					// Save original width before changing position
+					const rect = card.getBoundingClientRect();
+					card.style.width = `${rect.width}px`;
+					card.style.position = "fixed";
+					card.style.zIndex = "10000";
+					card.style.pointerEvents = "none";
+					card.style.left = `${rect.left}px`;
+					card.style.top = `${rect.top}px`;
+					card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
+					
+					e.preventDefault();
+				}
 			} else if (isDragging) {
 				// Update position during drag
 				card.style.transform = `translate(${touch.clientX - touchStartX}px, ${touch.clientY - touchStartY}px)`;
@@ -229,6 +272,15 @@ export class KanbanCard {
 
 		card.addEventListener("touchend", async (e: TouchEvent) => {
 			if (!draggedCard || draggedCard !== card) return;
+			
+			// Clear drag delay timeout
+			if (dragDelayTimeout) {
+				clearTimeout(dragDelayTimeout);
+				dragDelayTimeout = null;
+			}
+			
+			// Remove drag-ready class
+			card.classList.remove("drag-ready");
 			
 			if (isDragging) {
 				// Find the destination column
@@ -260,6 +312,7 @@ export class KanbanCard {
 				card.style.top = "";
 				card.style.transform = "";
 				isDragging = false;
+				isDragReady = false;
 				draggedCard = null;
 			} else {
 				// It's a tap, not a drag
@@ -279,6 +332,17 @@ export class KanbanCard {
 				}
 			}
 			
+			draggedCard = null;
+		}, { passive: true });
+		
+		// Handle touchcancel (e.g., when user scrolls or system interrupts)
+		card.addEventListener("touchcancel", () => {
+			if (dragDelayTimeout) {
+				clearTimeout(dragDelayTimeout);
+				dragDelayTimeout = null;
+			}
+			card.classList.remove("drag-ready");
+			isDragReady = false;
 			draggedCard = null;
 		}, { passive: true });
 	}

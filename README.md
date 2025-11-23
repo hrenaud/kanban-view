@@ -9,7 +9,7 @@ An Obsidian plugin that adds a Kanban view for Obsidian Bases with drag-and-drop
 - 📋 Kanban view to organize your notes in Bases
 - 🎯 Manual selection of the property to generate columns
 - 🖱️ Drag-and-drop to change item status (mouse and touch)
-- 📱 Full touch support for mobile
+- 📱 Full touch support for mobile with improved drag and drop UX (250ms delay to prevent conflicts with horizontal swipe)
 - ⚙️ Configuration of statuses/columns via the view interface
 - 🔄 Column reordering by drag-and-drop
 - 📦 Default "backlog" column for items without status
