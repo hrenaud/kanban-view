@@ -45,22 +45,15 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          body: ${{ steps.changelog.outputs.BODY }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.changelog.outputs.BODY }}
           files: |
             main.js
             styles.css
             manifest.json
-          body: ${{ steps.changelog.outputs.BODY }}
+          draft: false
+          prerelease: false
 

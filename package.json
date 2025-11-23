@@ -10,7 +10,8 @@
 		"changeset": "changeset",
 		"changeset:version": "changeset version",
 		"changeset:status": "changeset status",
-		"release": "npm run build && changeset publish"
+		"release": "npm run build && changeset publish",
+		"release:create": "npm run build && ./scripts/create-release.sh"
 	},
 	"keywords": [],
 	"author": "",
