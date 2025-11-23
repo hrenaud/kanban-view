@@ -111,7 +111,10 @@ When ready to release:
    git push
    ```
 
-3. **Create a GitHub release** with the new version tag
+3. **Create a GitHub release**:
+   - **Automatic**: If you push a tag (e.g., `git push origin v1.0.0`), the GitHub Action will automatically create the release
+   - **Manual**: Go to https://github.com/hrenaud/kanban-view/releases/new and create a release with the tag
+   - **Script**: Use `./scripts/create-release.sh v1.0.0` (requires GitHub CLI) or `GITHUB_TOKEN=token ./scripts/create-release-api.sh v1.0.0`
 
 ### Checking Status
 
