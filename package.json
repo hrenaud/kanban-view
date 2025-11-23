@@ -6,12 +6,17 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "changeset version && node .changeset/version-bump.mjs && git add manifest.json versions.json CHANGELOG.md",
+		"changeset": "changeset",
+		"changeset:version": "changeset version",
+		"changeset:status": "changeset status",
+		"release": "npm run build && changeset publish"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
+		"@changesets/cli": "^2.29.7",
 		"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
@@ -22,5 +27,3 @@
 		"typescript": "4.7.4"
 	}
 }
-
-

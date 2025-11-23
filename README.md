@@ -79,6 +79,48 @@ npm run dev
 npm run build
 ```
 
+## Release Management
+
+This project uses [Changesets](https://github.com/changesets/changesets) to manage versions and releases.
+
+### Adding a Changeset
+
+When making changes, add a changeset:
+
+```bash
+npm run changeset
+```
+
+This will prompt you to:
+1. Select the type of change (major, minor, or patch)
+2. Write a summary of the change
+
+### Releasing
+
+When ready to release:
+
+1. **Version the changes** (updates version in package.json, manifest.json, versions.json, and creates CHANGELOG.md):
+   ```bash
+   npm run version
+   ```
+
+2. **Commit the changes**:
+   ```bash
+   git add .
+   git commit -m "chore: version bump"
+   git push
+   ```
+
+3. **Create a GitHub release** with the new version tag
+
+### Checking Status
+
+To see pending changesets:
+
+```bash
+npm run changeset:status
+```
+
 ## Notes
 
 - This plugin requires Obsidian 1.7.2 or higher and the Bases plugin enabled.
