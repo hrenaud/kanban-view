@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Script to create a GitHub release using GitHub API
-# Usage: GITHUB_TOKEN=your_token ./scripts/create-release-api.sh v1.0.0
+# Usage: GITHUB_TOKEN=your_token ./scripts/create-release-api.sh 1.0.0
 
 set -e
 
 VERSION=$1
 if [ -z "$VERSION" ]; then
     echo "Usage: GITHUB_TOKEN=your_token $0 <version>"
-    echo "Example: GITHUB_TOKEN=your_token $0 v1.0.0"
+    echo "Example: GITHUB_TOKEN=your_token $0 1.0.0"
     exit 1
 fi
 
@@ -17,8 +17,8 @@ if [ -z "$GITHUB_TOKEN" ]; then
     exit 1
 fi
 
-# Remove 'v' prefix if present
-VERSION_NUMBER=${VERSION#v}
+# Use version as-is (no 'v' prefix)
+VERSION_NUMBER=$VERSION
 
 # Extract changelog for this version
 CHANGELOG=$(awk "/^## $VERSION_NUMBER/,/^## /" CHANGELOG.md | sed '$d' | sed '1d')
@@ -39,7 +39,7 @@ RELEASE_RESPONSE=$(curl -s -X POST \
   "https://api.github.com/repos/hrenaud/kanban-view/releases" \
   -d "{
     \"tag_name\": \"$VERSION\",
-    \"name\": \"Release $VERSION_NUMBER\",
+    \"name\": \"Release $VERSION\",
     \"body\": $CHANGELOG_JSON,
     \"draft\": false,
     \"prerelease\": false

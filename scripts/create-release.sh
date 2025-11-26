@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Script to create a GitHub release from a tag
-# Usage: ./scripts/create-release.sh v1.0.0
+# Usage: ./scripts/create-release.sh 1.0.0
 
 set -e
 
 VERSION=$1
 if [ -z "$VERSION" ]; then
     echo "Usage: $0 <version>"
-    echo "Example: $0 v1.0.0"
+    echo "Example: $0 1.0.0"
     exit 1
 fi
 
-# Remove 'v' prefix if present
-VERSION_NUMBER=${VERSION#v}
+# Use version as-is (no 'v' prefix)
+VERSION_NUMBER=$VERSION
 
 # Extract changelog for this version
 CHANGELOG=$(awk "/^## $VERSION_NUMBER/,/^## /" CHANGELOG.md | sed '$d' | sed '1d')
@@ -27,7 +27,7 @@ fi
 if command -v gh &> /dev/null; then
     echo "Creating GitHub release using GitHub CLI..."
     gh release create "$VERSION" \
-        --title "Release $VERSION_NUMBER" \
+        --title "Release $VERSION" \
         --notes "$CHANGELOG" \
         main.js \
         styles.css \
@@ -37,7 +37,7 @@ else
     echo ""
     echo "1. Go to https://github.com/hrenaud/kanban-view/releases/new"
     echo "2. Select tag: $VERSION"
-    echo "3. Title: Release $VERSION_NUMBER"
+    echo "3. Title: Release $VERSION"
     echo "4. Description:"
     echo "$CHANGELOG"
     echo ""

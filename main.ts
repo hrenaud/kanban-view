@@ -1,8 +1,8 @@
 /**
- * Kanban View Plugin for Obsidian Bases
+ * Kanban View Plugin for Bases
  * 
  * This plugin was created with AI assistance and is intended to be a temporary replacement
- * while waiting for the official Kanban view developed by the Obsidian team.
+ * while waiting for the official Kanban view developed by the product team.
  */
 
 import { KanbanView } from "./KanbanView";

@@ -1,10 +1,10 @@
 # Kanban View for Bases
 
-> **Important Note**: This plugin was created with AI assistance and is intended to be a **temporary replacement** while waiting for the official Kanban view developed by the Obsidian team.
+> **Important Note**: This plugin was created with AI assistance and is intended to be a **temporary replacement** while waiting for the official Kanban view developed by the product team.
 > 
 > **As this is a temporary plugin, bug reports will not be addressed.** This plugin will be deprecated once the official Kanban view is available.
 
-An Obsidian plugin that adds a Kanban view for Obsidian Bases with drag-and-drop support and custom configuration.
+An Obsidian plugin that adds a Kanban view for Bases with drag-and-drop support and custom configuration.
 
 ## Features
 
@@ -147,14 +147,14 @@ Use a `stage` property with values like:
 ## Notes
 
 - This plugin requires **Obsidian 1.7.2 or higher** and the **Bases plugin** enabled
-- **This plugin is temporary**: it was created with AI assistance while waiting for the official Kanban view developed by the Obsidian team
+- **This plugin is temporary**: it was created with AI assistance while waiting for the official Kanban view developed by the product team
 - Once the official view is available, this plugin will no longer be necessary and can be disabled
 
 ## Support
 
 - **Releases**: Check [GitHub Releases](https://github.com/hrenaud/kanban-view/releases) for the latest version
 
-> **Note**: As this is a temporary plugin, bug reports will not be addressed. This plugin was created as a stopgap solution while waiting for the official Kanban view from the Obsidian team. Once the official view is available, this plugin will be deprecated.
+> **Note**: As this is a temporary plugin, bug reports will not be addressed. This plugin was created as a stopgap solution while waiting for the official Kanban view from the product team. Once the official view is available, this plugin will be deprecated.
 
 ## License
 

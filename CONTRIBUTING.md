@@ -1,6 +1,6 @@
 # Contributing to Kanban View for Bases
 
-> **Important**: This is a **temporary plugin** created while waiting for the official Kanban view from the Obsidian team. As such, **bug reports will not be addressed** and the plugin will be deprecated once the official view is available. However, contributions are still welcome if you want to improve the plugin for your own use.
+> **Important**: This is a **temporary plugin** created while waiting for the official Kanban view from the product team. As such, **bug reports will not be addressed** and the plugin will be deprecated once the official view is available. However, contributions are still welcome if you want to improve the plugin for your own use.
 
 This document provides guidelines and instructions for contributing to the project.
 
@@ -257,11 +257,11 @@ This project uses [Changesets](https://github.com/changesets/changesets) for ver
    git commit -m "chore: version bump to X.Y.Z"
    ```
 
-4. **Create and push a tag**:
+4. **Create and push a tag** (without 'v' prefix):
    ```bash
-   git tag -a vX.Y.Z -m "Release vX.Y.Z"
+   git tag -a X.Y.Z -m "Release X.Y.Z"
    git push origin main
-   git push origin vX.Y.Z
+   git push origin X.Y.Z
    ```
 
 5. **GitHub Action** will automatically create the release with assets
@@ -355,7 +355,7 @@ This project uses [Changesets](https://github.com/changesets/changesets) for ver
 ## Getting Help
 
 - **Documentation**: Check the README and code comments
-- **Note**: As this is a temporary plugin, bug reports and feature requests will not be addressed. This plugin will be deprecated once the official Kanban view is available.
+- **Note**: As this is a temporary plugin, bug reports and feature requests will not be addressed. This plugin will be deprecated once the official Kanban view from the product team is available.
 
 ## License
 

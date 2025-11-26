@@ -1,9 +1,9 @@
 {
 	"id": "kanban-view",
 	"name": "Kanban View for Bases",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"minAppVersion": "1.7.2",
-	"description": "A temporary Kanban view for Obsidian Bases. This plugin was created with AI assistance while waiting for the official Kanban view developed by the Obsidian team.",
+	"description": "A temporary Kanban view for Bases. This plugin was created with AI assistance while waiting for the official Kanban view developed by the product team.",
 	"author": "Renaud HÉLUIN",
 	"authorUrl": "https://github.com/hrenaud",
 	"isDesktopOnly": false
